@@ -1,6 +1,6 @@
 # dungeons
 
-Create a game from a story in traditional D&D style.
+Write a story in traditional D&D style; then our app will convert this creative writing piece (written in plain English) to an interactive, playable game.
 
 ## Technologies
 - DALL-e Mini: Game-Image Generator
