@@ -28,12 +28,8 @@ const App = () => {
     return (
 <div className="app_wrap">
         <Router>
-            <div>
-                
-                <Navbar />
-                <LeftMenu/>
-
-            </div>
+            <Navbar />
+            <LeftMenu/>
 
             <Switch >
                 {/* {token ? null
@@ -51,8 +47,9 @@ const App = () => {
                 <Route path="/SignUpUser" element={<SignUp />} /> */}
                 {/* <Route path="/" element={<Home />} /> */}
             </Switch>
-        
-                 <Home/>
+        {/* make switch case for if user hasnt input story*/}
+            <Home/>
+            <ActionBar/>
         </Router >
         </div>
 

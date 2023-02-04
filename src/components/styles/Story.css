@@ -1,0 +1,45 @@
+.story_header{
+    align-self: center;
+   background-color: black;
+   box-shadow: rgba(0, 0, 0, 1) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.story_wrap{
+    box-shadow: rgba(0, 0, 0, 1) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 15px;
+}
+.story_textArea{
+    max-width:max-content;
+    color: white;
+    background-color: black;
+    align-self: center;
+    margin: 1rem 1rem;
+    min-width: 90%;
+    max-height: 300px;
+    min-height: 90%;
+    border-radius: 5px;
+    font-family: 'Aboreto', cursive;
+    text-decoration: none;
+
+
+}
+.story_content_wrap{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin-top: 10rem;
+}
+.story_button{
+    align-self: center;
+    position:relative;
+    bottom: 0;
+    margin-top: 1rem;
+    width: 25%;
+    margin-bottom: 1rem;
+    background-color: darkgray;
+    box-shadow: rgba(0, 0, 0, 1) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+}
+.story_button:hover{
+    cursor: pointer;
+}

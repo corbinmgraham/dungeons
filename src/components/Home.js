@@ -1,57 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { LogInUser } from "../api";
 import ActionBar from "./ActionBar";
 import './styles/Home.css'
 import './styles/ActionBar.css'
+import './styles/Story.css'
+import { generate_game } from "../api/processor";
+var nlp = require("wink-nlp-utils");
+
+
+
 const Home = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [story, setStory] = useState("");
+
+
+  const handleChange=(s)=>{
+    console.log(s)
+    localStorage.setItem('story', s)
+    generate_game(s)
+  
+
+  }
+
+useEffect(() => {
+
+}, [story])
 
 
 
   return (
-    <div className="home_wrapper">
-           <img src='https://thenerdd.files.wordpress.com/2020/12/1-3.jpg?w=1200'/>
-        <div>
-         
-            <div className="dialogue_body">
-                <h1>The Nether Trilogy Continues.</h1>
-                <p>
-            When	the	noble	realized	he	was	about	to	face	
-embarrassment	at	the	hands	of	a	group	of	rowdy	
-peasants,	he	took	matters	into	his	own	hands	and	
-sent	his	armed	guards	to	deliver	resolution.	Rather	
-than	face	the	consequences	of	beating	a	noble	to	near	
-death,	the	characters all fled out	the	back	door,	
-robbing	an	unsuspecting	ale	carter	of	his cargo,	
-wagon, and	horses,	then	tearing	off	into	the	night.
-<br/>
-Remember	how	I	said it	escalated?	Well,	this	is	the	
-point when things	REALLY	escalated.	After	a	series	of	
-chaotic	encounters,	the	crew	wakes	up	in	the	middle	
-of	unfamiliar	woods,	next	to	a	shattered	wagon,	with	
-a figure	hogtied	hanging	from	a	tree,
+    <div className="home">
+ 
+        {localStorage.getItem('story') ?  
+               <div className="home_wrapper"> 
+               <img src='https://i.ytimg.com/vi/3Imc8tnQNpE/maxresdefault.jpg'/>
+          <div className="dialogue_body">
+            <h1>A new challenger approaches...</h1>
+            <p className="dbp">
+            {localStorage.getItem('story')}
             </p>
+          </div>
 
-    
-      <form >
-        <input
-          placeholder="Character Name"
-          value={username}
-          onChange={(e)=>{setUsername(e.target.value)}}
-        ></input>
-        <input
-          placeholder="Class"
-          type="password"
-          onChange={(e)=>{setUsername(e.target.value)}}
-        ></input>
-        <button styles={{ width: "100px", height: "50px" }}>Submit</button>
-      </form>
-      </div>
-      </div>
-      <ActionBar/>
-    </div>
+          </div>
+            :   
+            <div className="story_content_wrap">
+             <h1 className="story_header">Input a storyline</h1>
+          <form className="story_wrap" >
+
+          <textarea className="story_textArea"
+            onChange={(e)=>{
+              setStory(e.target.value)}}
+            placeholder="Example:  Bilbo ,the Hobbit, is selected by the wizard Gandalf to help Thorin and his party of Dwarves to reclaim their ancestral home and treasure, which has been seized by the dragon Smaug. Bilbo sets out in The Hobbit timid and comfort-loving, and through his adventures grows to become a useful and resourceful member of the quest."
+            >
+            </textarea>
+            <button  type="button" className="story_button" styles={{ width: "100px", height: "50px" }}
+                      onClick={()=>{
+                        handleChange(story)}}>Submit</button>
+        </form>
+        </div>
+             
+        }
+
+      
+
+        </div>
+      //   {/* </div> */}
+      //   {/* <ActionBar/> */}
+      // </div>
+    // </div>
   );
 };
 
