@@ -6,27 +6,44 @@ function LeftMenu() {
     <div className='menu'>
       <div className='menu_wrap'>
         <h2 className='title'>Dungeons</h2>
-        <div id="l1">
-          <h1 className='list_title'>Enemies</h1>
+    {localStorage.getItem('story')? 
+    <>
+       <div id="l1">
+          <h1 className='list_title'>{localStorage.getItem('playerName')}</h1>
           <ul>
             <div>
-              <li>Stan</li>
-              {/* When 'Stan' is clicked, drop down new menu of their stats */}
+              <li>Weapon: {localStorage.getItem("playerWeapon")}</li>
               <ul>
-                <li>Facts</li>
+                <li>Weapon Damage: {localStorage.getItem("playerWeaponDamage")}</li>
               </ul>
             </div>
             <div>
-            <li>Fact</li>
-            <li>Fact</li>
-            <li>Fact</li>
-            <li>Fact</li>
-            <li>Fact</li>
+            <li>Trait(s): {localStorage.getItem("playerTraits")? localStorage.getItem("playerTraits"): "none"}</li>
+            <li>Health: {localStorage.getItem("playerHealth")}</li>
             </div>
           </ul>
-        </div>
+        </div> 
+        <div id="l2">
+               <h1 className='list_title2'>{localStorage.getItem('enemyName')}</h1>
+               <ul>
+                 <div>
+                   <li>Weapon: {localStorage.getItem("enemyWeapon")}</li>
+                   <ul>
+                     <li>Weapon Damage: {localStorage.getItem("enemyWeaponDamage")}</li>
+                   </ul>
+                 </div>
+                 <div>
+                 <li>Trait(s): {localStorage.getItem("enemyTraits")}</li>
+                 <li>Health: {localStorage.getItem("enemyHealth")}</li>
+                 </div>
+               </ul>
+             </div> 
+             </>
+        : null
+        }
       </div>
     </div>
+    
   )
 }
 

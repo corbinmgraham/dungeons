@@ -18,7 +18,7 @@ const Home = () => {
     console.log(s)
     localStorage.setItem('story', s)
     generate_game(s)
-  
+    window.location.reload()
 
   }
 
@@ -35,9 +35,9 @@ useEffect(() => {
                <div className="home_wrapper"> 
                <img src='https://i.ytimg.com/vi/3Imc8tnQNpE/maxresdefault.jpg'/>
           <div className="dialogue_body">
-            <h1>A new challenger approaches...</h1>
+            <h1>{localStorage.getItem('dead') !== 'dead' ? `A new challenger appears..${localStorage.getItem('enemyName')}`:"YOU HAVE DIED"}</h1>
             <p className="dbp">
-            {localStorage.getItem('story')}
+            {localStorage.getItem('dead') == 'dead' ?  'skill issue lol get good':  localStorage.getItem('story') }
             </p>
           </div>
 
@@ -55,7 +55,8 @@ useEffect(() => {
             </textarea>
             <button  type="button" className="story_button" styles={{ width: "100px", height: "50px" }}
                       onClick={()=>{
-                        handleChange(story)}}>Submit</button>
+                        handleChange(story)
+                        }}>Submit</button>
         </form>
         </div>
              
@@ -71,4 +72,4 @@ useEffect(() => {
   );
 };
 
-export default Home;
+export default Home
