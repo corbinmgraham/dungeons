@@ -3,11 +3,13 @@ function body_print(src) {
     main.innerHTML = src;
 }
 function generate_buttons(buttons) {
-    area = document.getElementById("button_area").innerHTML;
-    area = "";
-    
+    area = document.getElementById("button_area");
+    area.innerHTML = "";
     for(let button of buttons) {
-        area.innerHTML += "<button id='action'>" + button + "</button>";
+        btn = document.createElement('action');
+        btn.innerHTML = "<button id='action'>" + button + "</button>";
+        // btn = "<button id='action'>" + button + "</button>";
+        area.append(btn);
     }
 }
 function generate_body(name, buttons) {
@@ -17,13 +19,13 @@ function generate_body(name, buttons) {
 }
 
 function get_action() {
-    let _wait = true;
-
-    
-    
-    while(_wait) {};
-
-    return action;
+    return new Promise((resolve) => {
+        document.addEventListener('click', function(e) {
+            // e.target.id === 'action'
+            val = e.target.innerText;
+            resolve(val);
+        }, {once: true});
+    });
 }
 
 function randomIndex(max) {
@@ -73,7 +75,8 @@ const PlayerAttributes = [
 // Player-Specific Actions
 const PlayerActions = [
     'Attack',
-    'Inventory'
+    'Inventory',
+    'Exit'
 ]
 
 class Turn
@@ -99,35 +102,42 @@ class Game
         this.Turns = [];
         this.generate_game();
     }
-    generate_game() {
+    async generate_game() {
         for(p of this.Players) {
             this.Turns.push(p);
         }
         for(e of this.Enemies) {
             this.Turns.push(e);
         }
-        this.play();
-
+        await this.play();
+        generate_body("Game Over", []);
+        body_print("Game is over.");
     }
-    play() {
-        for(let t of this.Turns) {
-            let p = t.getAttribute('name');
-            generate_body(p, PlayerActions);
+    async play() {
+        let pn = this.Players[0].getAttribute('name');
+        generate_body(pn, PlayerActions);
+        while(true) {
+            for(let t of this.Turns) {
+                if (t.c_type === 'Player') {
+                    let action = await get_action();
+                    if (action === 'Exit') return;
 
-            let action = get_action();
-
-            // let action = t.move();
-            let e = action.getTarget();
-            
+                    let e = this.Enemies[0].getAttribute('name');
+    
+                    let ret = "Action: " + p + " " + action + " "  + e;
+                    body_print(ret);
+                } else {
+                    let ea = ['Continue'];
+                    ea = ea.concat(PlayerActions);
+                    generate_body(pn, ea);
+                    while(true) {
+                        let action = await get_action();
+                        if (action === 'Continue') break;
+                    }
+                }
+            }
         }
-        ret = "Action: " + p + " " + action + " "  + e;
-        body_print(ret);
     }
-    // display() {
-    //     ret = "";
-    //     ret += 
-    //     return ret;
-    // }
 }
 
 class Feature
@@ -155,6 +165,7 @@ class Feature
 
 class Character extends Feature
 {
+    c_type;
     constructor(Attributes) {
         super(Attributes);
     }
@@ -173,6 +184,7 @@ class Player extends Character
 {
     constructor(Attributes) {
         super(Attributes);
+        super.c_type = "Player";
     }
 }
 
@@ -180,6 +192,7 @@ class Enemy extends Character
 {
     constructor(Attributes) {
         super(Attributes);
+        super.c_type = "Enemy";
     }
  }
 
@@ -206,7 +219,7 @@ function main() {
     }
     e_attr = {
         'name': 'Steve',
-        'role': 'Matchmaker',
+        'role': 'Enemy',
         'weapon': w,
         'hp': 200
     }
