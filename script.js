@@ -120,7 +120,48 @@ class Game
         generate_body("Game Over", []);
         body_print("Game is over.");
     }
+    process_lang() {
+        let str = "Corbin is a mage with a sword that does 100 damage and his story is long. Bill is a dragon with fire breath that does 200 damage and his story is longer.";
+        let token = str.split(" ");
+        console.log(token);
+        let name = (function() {
+            let idx = token.indexOf('.')+1;
+            let n = token[idx];
+            token.splice(idx,2);
+            console.log(n);
+            return n;
+        })();
+        let role = (function() {
+            let idx = token.indexOf('is');
+            let r = token[idx+2];
+            token.splice(idx,2);
+            if (token[idx+1] === 'a') {
+                console.log(r);
+                return r;
+            }
+            return "no";
+        })();
+        let weapon = (function() {
+            let idx = token.indexOf('with') + 2;
+            let name = token[idx];
+            token.splice(idx-2,3);
+            idx = token.indexOf('damage') - 1;
+            let damage = token.pop(idx);
+            token.splice(idx+1,1);
+            console.log(token)
+            return {
+                'name': name,
+                'damage': damage
+            };
+        })();
+        console.log(weapon)
+        
+    }
     async play() {
+
+        this.process_lang()
+        return;
+
         let p = this.Players[0];
         let pn = p.getAttribute('name');
         let title = p.printAttributes();
