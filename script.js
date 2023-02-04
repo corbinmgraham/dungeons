@@ -96,18 +96,24 @@ class Game
     Players;
     Enemies;
     Turns;
-    display;
     constructor(Players, Enemies) {
         this.Players = Players;
         this.Enemies = Enemies;
         this.Turns = [];
         this.generate_game();
     }
+    listCharacter(Type) {
+        let chars = "";
+        for(let char of Type) {
+            chars += char.getAttribute('name') + " [" + char.getAttribute('hp') + "] ";
+        }
+        return chars;
+    }
     async generate_game() {
-        for(p of this.Players) {
+        for(let p of this.Players) {
             this.Turns.push(p);
         }
-        for(e of this.Enemies) {
+        for(let e of this.Enemies) {
             this.Turns.push(e);
         }
         await this.play();
@@ -122,25 +128,27 @@ class Game
         let ret, action, e;
         while(true) {
             let ret = "Action: ";
-            for(let t of this.Turns) {
-                if (t.c_type === 'Player') {
+            for(let p of this.Turns) {
+                if (p.c_type === 'Player') {
+                    body_print("Targets: " + this.listCharacter(this.Enemies));
                     action = await get_action();
                     if (action === 'Exit') return;
-                    
                     e = this.Enemies[0];
-                    t.move(action, e);
-                    // TODO: Implement Move -> Do Action
-
                 } else {
-                    generate_body(title, ['Continue']);
-                    while(true) {
-                        action = await get_action();
-                        if (action === 'Continue') break;
-                    }
+                    // Attack random player
+                    e = this.Players[randomIndex(this.Players.length)];
                 }
 
-                ret += pn + " " + action + " "  + e;
+                let move = p.move(action, e);
+                ret += p.getAttribute('name') + " " + move + " "  + e.getAttribute('name');
                 body_print(ret);
+
+                generate_body(title, ['Continue']);
+                while(true) {
+                    action = await get_action();
+                    if (action === 'Continue') break;
+                }
+
                 generate_body(title, PlayerActions);
                 ret = "Action: ";
             }
@@ -195,14 +203,15 @@ class Character extends Feature
     constructor(Attributes) {
         super(Attributes);
     }
-    move() {
-        console.log("move");
+    move(action, Enemy) {
+        console.log(action, Enemy);
         return "Attack";
     }
-    attack(Target) {
-        const weapon = this.getAttribute('weapon');
-        const dmg = weapon.getAttribute('damage');
-        weapon.damage(dmg, Target);
+    async attack(Target) {
+        weapon = this.getAttribute('weapon');
+        generate_buttons(weapon.listAttributes());
+        weapon = await get_action();
+        return "done";
     }
 }
 
@@ -212,14 +221,13 @@ class Player extends Character
         super(Attributes);
         super.c_type = "Player";
     }
-    async move(action, Enemy) {
+    move(action, Enemy) {
+        let weapon;
         switch (action) {
             case 'Attack':
-                    let weapon = this.getAttribute('weapon');
-                    generate_buttons(weapon.listAttributes());
-                    action = await get_action();
-                break;
+                return this.attack(Enemy)
         }
+        return "Unable to do action";
     }
 }
 
@@ -237,16 +245,18 @@ class Weapon extends Feature
         super(Attributes);
     }
     listAttributes() {
-        ret = [];
-        for(attr in this.Attributes['attacks']) {
-            ret.append(this.Attributes[attr]);
+        let ret = [];
+        for(let attack in this.Attributes['attacks']) {
+            let item = attack['name'] + ": " + attack['damage'];
+            ret.push(item);
         }
+        return ret;
     }
     printAttributes() {
         return this.getAttribute('name');
     }
     damage(damage, Target) {
-        Target.getAttribute('hp') -= Weapon.getAttribute('damage');
+        Target.getAttribute('hp') -= damage;
     }
 }
 
@@ -258,6 +268,10 @@ class Armor extends Feature
 }
 
 function main() {
+    spell = {
+        'type': 'heal',
+        'val': 100
+    }
     w_attr = {
         'name': 'SuperSword',
         'attacks': [
@@ -272,6 +286,7 @@ function main() {
         'name': 'Bob',
         'role': 'Matchmaker',
         'weapon': w,
+        'inventory': [spell],
         'hp': 200
     }
     e_attr = {
@@ -281,6 +296,6 @@ function main() {
         'hp': 200
     }
     p = new Player(p_attr);
-    e = new Enemy(e_attr);
-    g = new Game([p], [e]);
+    e1 = new Enemy(e_attr);
+    g = new Game([p], [e1]);
 }
