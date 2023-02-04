@@ -10,12 +10,6 @@ import {
     useHistory, Route
 } from "react-router-dom";
 import Home from "./Home";
-//import SignUpUser from './SignUp'
-// import Routines from './Routines'
-// import Activities from './Activities'
-// import MyRoutines from "./MyRoutines.js";
-// import SignUp from "./SignUpUser";
-// import LogIn from "./LogInUser"
 import Navbar from "./Navbar";
 import ActionBar from "./ActionBar";
 import LeftMenu from "./LeftMenu";

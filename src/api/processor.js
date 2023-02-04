@@ -50,7 +50,11 @@ class Enemy extends Character
 
 
 export function generate_game(story) {
-    // story = "The hero Steve Brown is a mage with a Super Sword that does 100 damage and his story is long. Bill Nye is a Flying Dragon with Fire Breath that does 200 Damage and his story is longer.";
+    //comment out to test your own story or keep this story variable in to see what it can do
+    //If you leave this story var in you can simply press start and our program will run a rough demo :)
+    story = "The hero Steve Brown is a mage with a Super Sword that does 100 damage and his story is long. Bill Nye is a Flying Dragon with Fire Breath that does 200 Damage and his story is longer.";
+    //
+    //
     var char;
     let sentences = nlp.string.sentences( story )
     let name = "Player";

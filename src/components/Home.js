@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import { LogInUser } from "../api";
-import ActionBar from "./ActionBar";
 import './styles/Home.css'
 import './styles/ActionBar.css'
 import './styles/Story.css'
@@ -37,7 +34,7 @@ useEffect(() => {
           <div className="dialogue_body">
             <h1>{localStorage.getItem('dead') !== 'dead' ? `A new challenger appears..${localStorage.getItem('enemyName')}`:"YOU HAVE DIED"}</h1>
             <p className="dbp">
-            {localStorage.getItem('dead') == 'dead' ?  'skill issue lol get good':  localStorage.getItem('story') }
+            {localStorage.getItem('dead') == 'dead' ?  'skill issue lol get good': null}
             </p>
           </div>
 
@@ -65,10 +62,7 @@ useEffect(() => {
       
 
         </div>
-      //   {/* </div> */}
-      //   {/* <ActionBar/> */}
-      // </div>
-    // </div>
+
   );
 };
 
