@@ -23,6 +23,7 @@ function get_action() {
         document.addEventListener('click', function(e) {
             // e.target.id === 'action'
             val = e.target.innerText;
+            console.log(val)
             resolve(val);
         }, {once: true});
     });
@@ -116,25 +117,30 @@ class Game
     async play() {
         let pn = this.Players[0].getAttribute('name');
         generate_body(pn, PlayerActions);
+        let ret, action, e;
         while(true) {
+            let ret = "Action: ";
             for(let t of this.Turns) {
                 if (t.c_type === 'Player') {
-                    let action = await get_action();
+                    action = await get_action();
                     if (action === 'Exit') return;
+                    
+                    e = this.Enemies[0].getAttribute('name');
+                    t.move(action);
+                    // TODO: Implement Move -> Do Action
 
-                    let e = this.Enemies[0].getAttribute('name');
-    
-                    let ret = "Action: " + p + " " + action + " "  + e;
-                    body_print(ret);
                 } else {
-                    let ea = ['Continue'];
-                    ea = ea.concat(PlayerActions);
-                    generate_body(pn, ea);
+                    generate_body(pn, ['Continue']);
                     while(true) {
-                        let action = await get_action();
+                        action = await get_action();
                         if (action === 'Continue') break;
                     }
                 }
+
+                ret += pn + " " + action + " "  + e;
+                body_print(ret);
+                generate_body(pn, PlayerActions);
+                ret = "Action: ";
             }
         }
     }
@@ -170,7 +176,7 @@ class Character extends Feature
         super(Attributes);
     }
     move() {
-
+        console.log("move");
         return "Attack";
     }
     attack(Target) {
@@ -185,6 +191,11 @@ class Player extends Character
     constructor(Attributes) {
         super(Attributes);
         super.c_type = "Player";
+    }
+    move(action) {
+        switch (action) {
+            case 'attack'
+        }
     }
 }
 
