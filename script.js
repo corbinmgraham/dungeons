@@ -115,8 +115,10 @@ class Game
         body_print("Game is over.");
     }
     async play() {
-        let pn = this.Players[0].getAttribute('name');
-        generate_body(pn, PlayerActions);
+        let p = this.Players[0];
+        let pn = p.getAttribute('name');
+        let title = p.printAttributes();
+        generate_body(title, PlayerActions);
         let ret, action, e;
         while(true) {
             let ret = "Action: ";
@@ -125,12 +127,12 @@ class Game
                     action = await get_action();
                     if (action === 'Exit') return;
                     
-                    e = this.Enemies[0].getAttribute('name');
-                    t.move(action);
+                    e = this.Enemies[0];
+                    t.move(action, e);
                     // TODO: Implement Move -> Do Action
 
                 } else {
-                    generate_body(pn, ['Continue']);
+                    generate_body(title, ['Continue']);
                     while(true) {
                         action = await get_action();
                         if (action === 'Continue') break;
@@ -139,7 +141,7 @@ class Game
 
                 ret += pn + " " + action + " "  + e;
                 body_print(ret);
-                generate_body(pn, PlayerActions);
+                generate_body(title, PlayerActions);
                 ret = "Action: ";
             }
         }
@@ -167,6 +169,24 @@ class Feature
         if (attr in this.Attributes) return this.Attributes[attr];
         return null;
     }
+
+    listAttributes() {
+        return this.Attributes;
+    }
+
+    printAttributes() {
+        let str = "";
+        for(let name in this.Attributes) {
+            let attr = this.Attributes[name];
+            if(typeof(attr) === 'object') {
+                str += attr.printAttributes();
+            } else {
+                str += name + ": " + attr;
+            }
+            str += " | ";
+        }
+        return str;
+    }
 }
 
 class Character extends Feature
@@ -192,9 +212,13 @@ class Player extends Character
         super(Attributes);
         super.c_type = "Player";
     }
-    move(action) {
+    async move(action, Enemy) {
         switch (action) {
-            case 'attack'
+            case 'Attack':
+                    let weapon = this.getAttribute('weapon');
+                    generate_buttons(weapon.listAttributes());
+                    action = await get_action();
+                break;
         }
     }
 }
@@ -212,14 +236,36 @@ class Weapon extends Feature
     constructor(Attributes) {
         super(Attributes);
     }
+    listAttributes() {
+        ret = [];
+        for(attr in this.Attributes['attacks']) {
+            ret.append(this.Attributes[attr]);
+        }
+    }
+    printAttributes() {
+        return this.getAttribute('name');
+    }
     damage(damage, Target) {
         Target.getAttribute('hp') -= Weapon.getAttribute('damage');
     }
 }
 
+class Armor extends Feature
+{
+    constructor(Attributes) {
+        super(Attributes);
+    }
+}
+
 function main() {
     w_attr = {
-        'damage': 100
+        'name': 'SuperSword',
+        'attacks': [
+            {
+                'name': 'poop',
+                'damage': 100
+            }
+        ]
     }
     w = new Weapon(w_attr);
     p_attr = {
